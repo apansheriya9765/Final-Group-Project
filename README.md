@@ -81,6 +81,12 @@ npm test
 - `GET /api/spaces?type=DESK` - Filter spaces by type
 - `POST /api/spaces` - Create a new space (Admin only)
 
+### Bookings
+- `POST /api/bookings` - Create a booking (authenticated users)
+- `POST /api/bookings/guest` - Create a guest booking (no auth)
+- `GET /api/bookings/my` - Get current user's bookings (authenticated)
+- `GET /api/bookings` - Get all bookings (Admin only)
+
 ### Health
 - `GET /api/health` - Health check endpoint
 

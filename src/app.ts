@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import authRoutes from "./interfaces/routes/authRoutes";
 import spaceRoutes from "./interfaces/routes/spaceRoutes";
+import bookingRoutes from "./interfaces/routes/bookingRoutes";
 import { logger } from "./infrastructure/logging/logger";
 
 const app = express();
@@ -19,6 +20,7 @@ app.use((req, res, next) => {
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/spaces", spaceRoutes);
+app.use("/api/bookings", bookingRoutes);
 
 // Health check
 app.get("/api/health", (req, res) => {

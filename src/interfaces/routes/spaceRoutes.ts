@@ -6,5 +6,7 @@ const router = Router();
 
 router.get("/", SpaceController.getAll);
 router.post("/", authenticate, authorize("ADMIN"), SpaceController.create);
+router.put("/:id", authenticate, authorize("ADMIN"), SpaceController.update);
+router.delete("/:id", authenticate, authorize("ADMIN"), SpaceController.remove);
 
 export default router;

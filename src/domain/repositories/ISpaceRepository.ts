@@ -8,4 +8,5 @@ export interface ISpaceRepository {
   findAvailable(): Promise<Space[]>;
   create(data: CreateSpaceDTO): Promise<Space>;
   update(id: string, data: Partial<CreateSpaceDTO>): Promise<Space>;
+  delete(id: string): Promise<void>;
 }

@@ -19,6 +19,15 @@ export const createSpaceSchema = z.object({
   amenities: z.array(z.string()).default([]),
 });
 
+export const updateSpaceSchema = z.object({
+  name: z.string().min(1).optional(),
+  type: z.enum(["DESK", "PRIVATE_POD"]).optional(),
+  capacity: z.number().int().positive().optional(),
+  pricePerHour: z.number().positive().optional(),
+  amenities: z.array(z.string()).optional(),
+  isAvailable: z.boolean().optional(),
+});
+
 export const createBookingSchema = z.object({
   spaceId: z.string().uuid("Invalid space ID"),
   date: z.string().refine((val) => !isNaN(Date.parse(val)), "Invalid date"),

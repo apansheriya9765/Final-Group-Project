@@ -3,6 +3,7 @@ import { CreateBooking } from "../../application/use-cases/CreateBooking";
 import { GetBookings } from "../../application/use-cases/GetBookings";
 import { CancelBooking } from "../../application/use-cases/CancelBooking";
 import { CheckAvailability } from "../../application/use-cases/CheckAvailability";
+import { AdminManageBooking } from "../../application/use-cases/AdminManageBooking";
 import { PrismaBookingRepository } from "../../infrastructure/repositories/PrismaBookingRepository";
 import { PrismaSpaceRepository } from "../../infrastructure/repositories/PrismaSpaceRepository";
 import { createBookingSchema } from "../middleware/validation";
@@ -204,6 +205,68 @@ export class BookingController {
 
       if (error.message === "Space not found") {
         res.status(404).json({ error: error.message });
+        return;
+      }
+
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
+
+  // Admin confirm booking
+  static async confirmBooking(
+    req: AuthRequest,
+    res: Response
+  ): Promise<void> {
+    try {
+      const { id } = req.params;
+      const adminManage = new AdminManageBooking(bookingRepository);
+      const booking = await adminManage.confirm(id);
+
+      res.status(200).json({
+        message: "Booking confirmed successfully",
+        booking,
+      });
+    } catch (error: any) {
+      logger.error(`Admin confirm booking error: ${error.message}`);
+
+      if (error.message === "Booking not found") {
+        res.status(404).json({ error: error.message });
+        return;
+      }
+
+      if (error.message.includes("Cannot confirm")) {
+        res.status(400).json({ error: error.message });
+        return;
+      }
+
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
+
+  // Admin decline booking
+  static async declineBooking(
+    req: AuthRequest,
+    res: Response
+  ): Promise<void> {
+    try {
+      const { id } = req.params;
+      const adminManage = new AdminManageBooking(bookingRepository);
+      const booking = await adminManage.decline(id);
+
+      res.status(200).json({
+        message: "Booking declined successfully",
+        booking,
+      });
+    } catch (error: any) {
+      logger.error(`Admin decline booking error: ${error.message}`);
+
+      if (error.message === "Booking not found") {
+        res.status(404).json({ error: error.message });
+        return;
+      }
+
+      if (error.message.includes("Cannot decline")) {
+        res.status(400).json({ error: error.message });
         return;
       }
 

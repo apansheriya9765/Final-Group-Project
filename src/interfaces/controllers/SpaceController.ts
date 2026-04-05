@@ -1,8 +1,10 @@
 import { Request, Response } from "express";
 import { GetSpaces } from "../../application/use-cases/GetSpaces";
 import { CreateSpace } from "../../application/use-cases/CreateSpace";
+import { UpdateSpace } from "../../application/use-cases/UpdateSpace";
+import { DeleteSpace } from "../../application/use-cases/DeleteSpace";
 import { PrismaSpaceRepository } from "../../infrastructure/repositories/PrismaSpaceRepository";
-import { createSpaceSchema } from "../middleware/validation";
+import { createSpaceSchema, updateSpaceSchema } from "../middleware/validation";
 import { SpaceType } from "../../domain/entities/Space";
 import { logger } from "../../infrastructure/logging/logger";
 
@@ -53,6 +55,53 @@ export class SpaceController {
 
       if (error.name === "ZodError") {
         res.status(400).json({ error: "Validation failed", details: error.errors });
+        return;
+      }
+
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
+
+  static async update(req: Request, res: Response): Promise<void> {
+    try {
+      const { id } = req.params;
+      const validatedData = updateSpaceSchema.parse(req.body);
+      const updateSpace = new UpdateSpace(spaceRepository);
+      const space = await updateSpace.execute(id, validatedData);
+
+      res.status(200).json({
+        message: "Space updated successfully",
+        space,
+      });
+    } catch (error: any) {
+      logger.error(`Update space error: ${error.message}`);
+
+      if (error.name === "ZodError") {
+        res.status(400).json({ error: "Validation failed", details: error.errors });
+        return;
+      }
+
+      if (error.message === "Space not found") {
+        res.status(404).json({ error: error.message });
+        return;
+      }
+
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
+
+  static async remove(req: Request, res: Response): Promise<void> {
+    try {
+      const { id } = req.params;
+      const deleteSpace = new DeleteSpace(spaceRepository);
+      await deleteSpace.execute(id);
+
+      res.status(200).json({ message: "Space deleted successfully" });
+    } catch (error: any) {
+      logger.error(`Delete space error: ${error.message}`);
+
+      if (error.message === "Space not found") {
+        res.status(404).json({ error: error.message });
         return;
       }
 

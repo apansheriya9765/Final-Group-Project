@@ -26,4 +26,8 @@ export class PrismaSpaceRepository implements ISpaceRepository {
   async update(id: string, data: Partial<CreateSpaceDTO>): Promise<Space> {
     return prisma.space.update({ where: { id }, data });
   }
+
+  async delete(id: string): Promise<void> {
+    await prisma.space.delete({ where: { id } });
+  }
 }

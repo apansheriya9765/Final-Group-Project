@@ -48,6 +48,7 @@ describe("GetSpaces", () => {
       findAvailable: jest.fn(),
       create: jest.fn(),
       update: jest.fn(),
+      delete: jest.fn(),
     };
     getSpaces = new GetSpaces(mockSpaceRepository);
   });

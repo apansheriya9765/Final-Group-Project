@@ -47,6 +47,7 @@ describe("CreateBooking", () => {
       findAvailable: jest.fn(),
       create: jest.fn(),
       update: jest.fn(),
+      delete: jest.fn(),
     };
 
     createBooking = new CreateBooking(mockBookingRepository, mockSpaceRepository);

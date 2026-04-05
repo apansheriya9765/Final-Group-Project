@@ -15,5 +15,17 @@ router.patch("/:id/cancel", authenticate, BookingController.cancel);
 
 // Admin routes
 router.get("/", authenticate, authorize("ADMIN"), BookingController.getAll);
+router.patch(
+  "/:id/confirm",
+  authenticate,
+  authorize("ADMIN"),
+  BookingController.confirmBooking
+);
+router.patch(
+  "/:id/decline",
+  authenticate,
+  authorize("ADMIN"),
+  BookingController.declineBooking
+);
 
 export default router;

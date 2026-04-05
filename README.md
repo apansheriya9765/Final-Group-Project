@@ -77,8 +77,8 @@ npm test
 - `POST /api/auth/login` - Login and get JWT token
 
 ### Spaces
-- `GET /api/spaces` - List all available spaces (public)
-- `GET /api/spaces?type=DESK` - Filter spaces by type
+- `GET /api/spaces` - List all available spaces with pagination (public)
+- `GET /api/spaces?type=DESK&page=1&limit=10` - Filter by type with pagination
 - `POST /api/spaces` - Create a new space (Admin only)
 
 ### Bookings
@@ -86,6 +86,8 @@ npm test
 - `POST /api/bookings/guest` - Create a guest booking (no auth)
 - `GET /api/bookings/my` - Get current user's bookings (authenticated)
 - `GET /api/bookings` - Get all bookings (Admin only)
+- `PATCH /api/bookings/:id/cancel` - Cancel own booking (authenticated)
+- `GET /api/bookings/availability?spaceId=&date=&startTime=&endTime=` - Check availability (public)
 
 ### Health
 - `GET /api/health` - Health check endpoint

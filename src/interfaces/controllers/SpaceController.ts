@@ -12,10 +12,26 @@ export class SpaceController {
   static async getAll(req: Request, res: Response): Promise<void> {
     try {
       const type = req.query.type as SpaceType | undefined;
-      const getSpaces = new GetSpaces(spaceRepository);
-      const spaces = await getSpaces.execute(type);
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 10;
 
-      res.status(200).json({ spaces });
+      const getSpaces = new GetSpaces(spaceRepository);
+      const allSpaces = await getSpaces.execute(type);
+
+      // Pagination
+      const startIndex = (page - 1) * limit;
+      const endIndex = page * limit;
+      const paginatedSpaces = allSpaces.slice(startIndex, endIndex);
+
+      res.status(200).json({
+        spaces: paginatedSpaces,
+        pagination: {
+          currentPage: page,
+          totalPages: Math.ceil(allSpaces.length / limit),
+          totalItems: allSpaces.length,
+          itemsPerPage: limit,
+        },
+      });
     } catch (error: any) {
       logger.error(`Get spaces error: ${error.message}`);
       res.status(500).json({ error: "Internal server error" });

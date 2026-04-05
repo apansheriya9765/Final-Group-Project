@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { CreateBooking } from "../../application/use-cases/CreateBooking";
 import { GetBookings } from "../../application/use-cases/GetBookings";
+import { CancelBooking } from "../../application/use-cases/CancelBooking";
+import { CheckAvailability } from "../../application/use-cases/CheckAvailability";
 import { PrismaBookingRepository } from "../../infrastructure/repositories/PrismaBookingRepository";
 import { PrismaSpaceRepository } from "../../infrastructure/repositories/PrismaSpaceRepository";
 import { createBookingSchema } from "../middleware/validation";
@@ -136,6 +138,75 @@ export class BookingController {
       res.status(200).json({ bookings });
     } catch (error: any) {
       logger.error(`Get all bookings error: ${error.message}`);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
+
+  // Cancel booking (authenticated user)
+  static async cancel(req: AuthRequest, res: Response): Promise<void> {
+    try {
+      const { id } = req.params;
+      const cancelBooking = new CancelBooking(bookingRepository);
+      const booking = await cancelBooking.execute(id, req.user!.userId);
+
+      res.status(200).json({
+        message: "Booking cancelled successfully",
+        booking,
+      });
+    } catch (error: any) {
+      logger.error(`Cancel booking error: ${error.message}`);
+
+      if (error.message === "Booking not found") {
+        res.status(404).json({ error: error.message });
+        return;
+      }
+
+      if (
+        error.message.includes("only cancel your own") ||
+        error.message.includes("already cancelled") ||
+        error.message.includes("Cannot cancel")
+      ) {
+        res.status(400).json({ error: error.message });
+        return;
+      }
+
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
+
+  // Check space availability (public)
+  static async checkAvailability(req: Request, res: Response): Promise<void> {
+    try {
+      const { spaceId, date, startTime, endTime } = req.query;
+
+      if (!spaceId || !date || !startTime || !endTime) {
+        res.status(400).json({
+          error: "Missing required query parameters: spaceId, date, startTime, endTime",
+        });
+        return;
+      }
+
+      const checkAvailability = new CheckAvailability(
+        bookingRepository,
+        spaceRepository
+      );
+
+      const result = await checkAvailability.execute({
+        spaceId: spaceId as string,
+        date: new Date(date as string),
+        startTime: startTime as string,
+        endTime: endTime as string,
+      });
+
+      res.status(200).json(result);
+    } catch (error: any) {
+      logger.error(`Check availability error: ${error.message}`);
+
+      if (error.message === "Space not found") {
+        res.status(404).json({ error: error.message });
+        return;
+      }
+
       res.status(500).json({ error: "Internal server error" });
     }
   }

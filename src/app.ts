@@ -3,6 +3,7 @@ import cors from "cors";
 import authRoutes from "./interfaces/routes/authRoutes";
 import spaceRoutes from "./interfaces/routes/spaceRoutes";
 import bookingRoutes from "./interfaces/routes/bookingRoutes";
+import { errorHandler } from "./interfaces/middleware/errorHandler";
 import { logger } from "./infrastructure/logging/logger";
 
 const app = express();
@@ -11,9 +12,15 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Request logging middleware
+// Request logging middleware with duration tracking
 app.use((req, res, next) => {
-  logger.info(`${req.method} ${req.path}`);
+  const start = Date.now();
+  res.on("finish", () => {
+    const duration = Date.now() - start;
+    logger.info(
+      `${req.method} ${req.path} ${res.statusCode} - ${duration}ms`
+    );
+  });
   next();
 });
 
@@ -31,5 +38,8 @@ app.get("/api/health", (req, res) => {
 app.use((req, res) => {
   res.status(404).json({ error: "Route not found" });
 });
+
+// Global error handler
+app.use(errorHandler);
 
 export default app;

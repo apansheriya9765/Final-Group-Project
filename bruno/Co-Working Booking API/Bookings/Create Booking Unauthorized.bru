@@ -1,0 +1,25 @@
+meta {
+  name: Create Booking Unauthorized (401)
+  type: http
+  seq: 9
+}
+
+post {
+  url: {{baseUrl}}/bookings
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "spaceId": "{{spaceId}}",
+    "date": "2026-05-03",
+    "startTime": "09:00",
+    "endTime": "10:00"
+  }
+}
+
+docs {
+  # Create Booking Unauthorized
+  Sends no token. Demonstrates authentication middleware. Expect HTTP 401.
+}

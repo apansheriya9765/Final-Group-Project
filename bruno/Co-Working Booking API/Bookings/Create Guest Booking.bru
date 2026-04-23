@@ -1,0 +1,28 @@
+meta {
+  name: Create Guest Booking
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/bookings/guest
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "spaceId": "{{spaceId}}",
+    "date": "2026-05-02",
+    "startTime": "14:00",
+    "endTime": "15:00",
+    "guestEmail": "guest@example.com",
+    "guestName": "Guest Visitor"
+  }
+}
+
+docs {
+  # Create Guest Booking
+  Public endpoint. Unauthenticated users can book by supplying guestEmail and guestName.
+  Must differ from the user booking's date/time to avoid 409 conflicts.
+}

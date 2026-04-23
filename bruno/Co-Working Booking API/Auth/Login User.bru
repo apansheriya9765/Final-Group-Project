@@ -1,0 +1,30 @@
+meta {
+  name: Login User
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/auth/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "{{userEmail}}",
+    "password": "{{userPassword}}"
+  }
+}
+
+script:post-response {
+  if (res.status === 200 && res.body && res.body.token) {
+    bru.setEnvVar("userToken", res.body.token);
+  }
+}
+
+docs {
+  # Login User
+  Logs in the seeded regular user and saves the JWT to `userToken`.
+  Seeded user: user@example.com / user123
+}

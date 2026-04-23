@@ -1,0 +1,36 @@
+meta {
+  name: Create Booking (User)
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/bookings
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{userToken}}
+}
+
+body:json {
+  {
+    "spaceId": "{{spaceId}}",
+    "date": "2026-05-01",
+    "startTime": "10:00",
+    "endTime": "11:00"
+  }
+}
+
+script:post-response {
+  if (res.status === 201 && res.body && res.body.booking && res.body.booking.id) {
+    bru.setEnvVar("bookingId", res.body.booking.id);
+  }
+}
+
+docs {
+  # Create Booking (User)
+  Authenticated user creates a booking for a space/date/time slot.
+  Saves the new booking id to `bookingId`. Requires `userToken` and `spaceId`.
+}

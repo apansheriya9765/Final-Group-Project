@@ -1,0 +1,30 @@
+meta {
+  name: Login Admin
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/auth/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "admin@cowork.com",
+    "password": "admin123"
+  }
+}
+
+script:post-response {
+  if (res.status === 200 && res.body && res.body.token) {
+    bru.setEnvVar("adminToken", res.body.token);
+  }
+}
+
+docs {
+  # Login Admin
+  Logs in the seeded admin account and saves the JWT to `adminToken`.
+  Seeded admin: admin@cowork.com / admin123
+}

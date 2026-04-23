@@ -64,7 +64,7 @@ export class SpaceController {
 
   static async update(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
       const validatedData = updateSpaceSchema.parse(req.body);
       const updateSpace = new UpdateSpace(spaceRepository);
       const space = await updateSpace.execute(id, validatedData);
@@ -92,7 +92,7 @@ export class SpaceController {
 
   static async remove(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
       const deleteSpace = new DeleteSpace(spaceRepository);
       await deleteSpace.execute(id);
 

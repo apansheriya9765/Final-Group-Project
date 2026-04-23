@@ -1,0 +1,21 @@
+meta {
+  name: Cancel Booking
+  type: http
+  seq: 8
+}
+
+patch {
+  url: {{baseUrl}}/bookings/{{bookingId}}/cancel
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{userToken}}
+}
+
+docs {
+  # Cancel Booking
+  Authenticated user cancels their own booking.
+  Trying to cancel someone else's booking returns HTTP 400.
+}

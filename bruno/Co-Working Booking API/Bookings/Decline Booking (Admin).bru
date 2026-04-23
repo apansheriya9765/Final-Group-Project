@@ -1,0 +1,21 @@
+meta {
+  name: Decline Booking (Admin)
+  type: http
+  seq: 7
+}
+
+patch {
+  url: {{baseUrl}}/bookings/{{bookingId}}/decline
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminToken}}
+}
+
+docs {
+  # Decline Booking (Admin)
+  Admin rejects a pending booking, moving it to DECLINED status.
+  Note: a booking cannot be both confirmed and declined — pick one per booking.
+}

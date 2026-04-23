@@ -1,0 +1,20 @@
+meta {
+  name: Confirm Booking (Admin)
+  type: http
+  seq: 6
+}
+
+patch {
+  url: {{baseUrl}}/bookings/{{bookingId}}/confirm
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminToken}}
+}
+
+docs {
+  # Confirm Booking (Admin)
+  Admin accepts a pending booking, moving it to CONFIRMED status.
+}

@@ -1,0 +1,20 @@
+meta {
+  name: Get My Bookings
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/bookings/my
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{userToken}}
+}
+
+docs {
+  # Get My Bookings
+  Authenticated. Returns the current user's bookings only.
+}

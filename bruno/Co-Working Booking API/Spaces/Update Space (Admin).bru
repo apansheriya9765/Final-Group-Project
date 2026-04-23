@@ -1,0 +1,27 @@
+meta {
+  name: Update Space (Admin)
+  type: http
+  seq: 5
+}
+
+put {
+  url: {{baseUrl}}/spaces/{{spaceId}}
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminToken}}
+}
+
+body:json {
+  {
+    "pricePerHour": 32.5,
+    "amenities": ["WiFi", "Whiteboard", "Monitor", "Standing Desk"]
+  }
+}
+
+docs {
+  # Update Space (Admin)
+  Admin-only partial update of the space stored in `spaceId`.
+}

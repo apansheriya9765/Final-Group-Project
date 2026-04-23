@@ -1,0 +1,30 @@
+meta {
+  name: Create Space Forbidden (403)
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/spaces
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{userToken}}
+}
+
+body:json {
+  {
+    "name": "Unauthorized Space",
+    "type": "DESK",
+    "capacity": 1,
+    "pricePerHour": 5,
+    "amenities": []
+  }
+}
+
+docs {
+  # Create Space Forbidden
+  Demonstrates authorization. A regular USER token should receive HTTP 403.
+}

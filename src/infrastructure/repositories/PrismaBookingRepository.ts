@@ -1,21 +1,27 @@
 import prisma from "../database/prismaClient";
 import { IBookingRepository } from "../../domain/repositories/IBookingRepository";
-import { Booking, CreateBookingDTO } from "../../domain/entities/Booking";
+import { Booking, CreateBookingDTO, BookingStatus } from "../../domain/entities/Booking";
+
+function toDomain(booking: Record<string, any>): Booking {
+  return { ...booking, status: booking.status as BookingStatus } as Booking;
+}
 
 export class PrismaBookingRepository implements IBookingRepository {
   async findById(id: string): Promise<Booking | null> {
-    return prisma.booking.findUnique({
+    const booking = await prisma.booking.findUnique({
       where: { id },
       include: { space: true },
     });
+    return booking ? toDomain(booking) : null;
   }
 
   async findByUserId(userId: string): Promise<Booking[]> {
-    return prisma.booking.findMany({
+    const bookings = await prisma.booking.findMany({
       where: { userId },
       include: { space: true },
       orderBy: { date: "desc" },
     });
+    return bookings.map(toDomain);
   }
 
   async findBySpaceAndDate(spaceId: string, date: Date): Promise<Booking[]> {
@@ -24,7 +30,7 @@ export class PrismaBookingRepository implements IBookingRepository {
     const endOfDay = new Date(date);
     endOfDay.setHours(23, 59, 59, 999);
 
-    return prisma.booking.findMany({
+    const bookings = await prisma.booking.findMany({
       where: {
         spaceId,
         date: {
@@ -36,12 +42,13 @@ export class PrismaBookingRepository implements IBookingRepository {
         },
       },
     });
+    return bookings.map(toDomain);
   }
 
   async create(
     data: CreateBookingDTO & { totalPrice: number }
   ): Promise<Booking> {
-    return prisma.booking.create({
+    const booking = await prisma.booking.create({
       data: {
         userId: data.userId,
         guestEmail: data.guestEmail,
@@ -54,20 +61,23 @@ export class PrismaBookingRepository implements IBookingRepository {
       },
       include: { space: true },
     });
+    return toDomain(booking);
   }
 
   async updateStatus(id: string, status: string): Promise<Booking> {
-    return prisma.booking.update({
+    const booking = await prisma.booking.update({
       where: { id },
       data: { status: status as any },
       include: { space: true },
     });
+    return toDomain(booking);
   }
 
   async findAll(): Promise<Booking[]> {
-    return prisma.booking.findMany({
+    const bookings = await prisma.booking.findMany({
       include: { space: true, user: true },
       orderBy: { createdAt: "desc" },
     });
+    return bookings.map(toDomain);
   }
 }

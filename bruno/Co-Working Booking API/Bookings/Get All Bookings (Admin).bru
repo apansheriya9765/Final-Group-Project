@@ -1,0 +1,20 @@
+meta {
+  name: Get All Bookings (Admin)
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/bookings
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminToken}}
+}
+
+docs {
+  # Get All Bookings (Admin)
+  Admin-only. Returns bookings across all users.
+}

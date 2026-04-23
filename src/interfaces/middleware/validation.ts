@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { SpaceType } from "../../domain/entities/Space";
 
 export const registerSchema = z.object({
   email: z.string().email("Invalid email format"),
@@ -13,7 +14,7 @@ export const loginSchema = z.object({
 
 export const createSpaceSchema = z.object({
   name: z.string().min(1, "Space name is required"),
-  type: z.enum(["DESK", "PRIVATE_POD"]),
+  type: z.nativeEnum(SpaceType),
   capacity: z.number().int().positive("Capacity must be a positive integer"),
   pricePerHour: z.number().positive("Price must be positive"),
   amenities: z.array(z.string()).default([]),
@@ -21,7 +22,7 @@ export const createSpaceSchema = z.object({
 
 export const updateSpaceSchema = z.object({
   name: z.string().min(1).optional(),
-  type: z.enum(["DESK", "PRIVATE_POD"]).optional(),
+  type: z.nativeEnum(SpaceType).optional(),
   capacity: z.number().int().positive().optional(),
   pricePerHour: z.number().positive().optional(),
   amenities: z.array(z.string()).optional(),

@@ -1,0 +1,23 @@
+meta {
+  name: Login Invalid (401)
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/auth/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "{{adminEmail}}",
+    "password": "wrong-password"
+  }
+}
+
+docs {
+  # Login Invalid
+  Demonstrates authentication failure path. Expect HTTP 401.
+}

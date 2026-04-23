@@ -1,0 +1,28 @@
+meta {
+  name: Get All Spaces
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/spaces?page=1&limit=10
+  body: none
+  auth: none
+}
+
+params:query {
+  page: 1
+  limit: 10
+}
+
+script:post-response {
+  if (res.status === 200 && res.body && res.body.spaces && res.body.spaces.length > 0) {
+    bru.setEnvVar("spaceId", res.body.spaces[0].id);
+  }
+}
+
+docs {
+  # Get All Spaces
+  Public endpoint. Returns paginated list of spaces with pagination metadata.
+  The first space's id is saved to `spaceId` for downstream requests.
+}

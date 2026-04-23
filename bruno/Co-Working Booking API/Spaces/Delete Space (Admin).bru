@@ -1,0 +1,21 @@
+meta {
+  name: Delete Space (Admin)
+  type: http
+  seq: 6
+}
+
+delete {
+  url: {{baseUrl}}/spaces/{{spaceId}}
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{adminToken}}
+}
+
+docs {
+  # Delete Space (Admin)
+  Admin-only. Deletes the space in `spaceId`. Run last during a demo so
+  subsequent bookings still have a space to target.
+}

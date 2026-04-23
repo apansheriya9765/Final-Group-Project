@@ -1,0 +1,22 @@
+meta {
+  name: Get Spaces By Type
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/spaces?type=DESK&page=1&limit=10
+  body: none
+  auth: none
+}
+
+params:query {
+  type: DESK
+  page: 1
+  limit: 10
+}
+
+docs {
+  # Get Spaces By Type
+  Filter spaces by type. Valid values: `DESK`, `PRIVATE_POD`.
+}

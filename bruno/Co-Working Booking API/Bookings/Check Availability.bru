@@ -1,0 +1,24 @@
+meta {
+  name: Check Availability
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/bookings/availability?spaceId={{spaceId}}&date=2026-05-01&startTime=10:00&endTime=11:00
+  body: none
+  auth: none
+}
+
+params:query {
+  spaceId: {{spaceId}}
+  date: 2026-05-01
+  startTime: 10:00
+  endTime: 11:00
+}
+
+docs {
+  # Check Availability
+  Public endpoint. Checks whether a space is free during the requested slot.
+  Requires `spaceId` — run "Get All Spaces" first.
+}

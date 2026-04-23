@@ -146,7 +146,7 @@ export class BookingController {
   // Cancel booking (authenticated user)
   static async cancel(req: AuthRequest, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
       const cancelBooking = new CancelBooking(bookingRepository);
       const booking = await cancelBooking.execute(id, req.user!.userId);
 
@@ -218,7 +218,7 @@ export class BookingController {
     res: Response
   ): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
       const adminManage = new AdminManageBooking(bookingRepository);
       const booking = await adminManage.confirm(id);
 
@@ -249,7 +249,7 @@ export class BookingController {
     res: Response
   ): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
       const adminManage = new AdminManageBooking(bookingRepository);
       const booking = await adminManage.decline(id);
 

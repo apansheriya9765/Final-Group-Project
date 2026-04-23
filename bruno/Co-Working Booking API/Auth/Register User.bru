@@ -1,0 +1,28 @@
+meta {
+  name: Register User
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/auth/register
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "newuser@example.com",
+    "password": "password123",
+    "name": "New User"
+  }
+}
+
+docs {
+  # Register User
+  Creates a new USER account. Returns the user (without password).
+  
+  - 201: created
+  - 400: validation failed
+  - 409: email already exists
+}
